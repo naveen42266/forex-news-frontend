@@ -208,7 +208,7 @@ const News: React.FC = () => {
           </Drawer>
         </main>
         {/* Ensure Footer takes full width */}
-        <footer className='w-full py-5'>
+        <footer className='w-full pt-5'>
           <Footer />
         </footer>
       </div>
