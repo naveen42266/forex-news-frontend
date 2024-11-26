@@ -31,7 +31,6 @@ const Home: React.FC<ArticlesDetailProps> = ({ articles }) => {
   const { user, updateUser } = useUserDetails();
   const token  = router.query.token as string; // Ensure you fetch the ID from query params
 
-
   const getAllNewsApi = async () => {
     try {
       const response = await getAllNews();
@@ -117,7 +116,8 @@ const Home: React.FC<ArticlesDetailProps> = ({ articles }) => {
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
     const api = axios.create({
-      baseURL: "http://localhost:8080/api/news", // Replace with your API base URL
+      baseURL: 'https://forex-news-backend.onrender.com/api/news',
+      // baseURL: "http://localhost:8080/api/news", // Replace with your API base URL
       headers: {
         "Content-Type": "application/json",
       },

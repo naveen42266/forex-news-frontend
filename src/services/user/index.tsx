@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: 'http://localhost:8080/api/', // replace with your backend API URL
+  baseURL: 'https://forex-news-backend.onrender.com/api/',
   // baseURL: 'http://localhost:8080/api/', // replace with your backend API URL
   headers: {
     'Content-Type': 'application/json',
@@ -15,14 +15,14 @@ export async function login(email: string, password: string) {
       password,
     });
     console.log("Login successful:", response.data);
-    return response.data; 
+    return response.data;
   } catch (error: any) {
     if (error.response) {
       console.error("Login error:", error.response.data.error);
-      return { error: error.response.data.error }; 
+      return { error: error.response.data.error };
     } else {
       console.error("Error:", error.message);
-      return { error: error.message }; 
+      return { error: error.message };
     }
   }
 }
@@ -48,32 +48,32 @@ export async function signup(
     });
 
     console.log("Signup successful:", response.data);
-    return response.data; 
+    return response.data;
   } catch (error: any) {
     if (error.response) {
       console.error("Signup error:", error.response.data.error);
-      return { error: error.response.data.error }; 
+      return { error: error.response.data.error };
     } else {
       console.error("Error:", error.message);
-      return { error: error.message }; 
+      return { error: error.message };
     }
   }
 }
 
-export async function googleLoginSignup (credential : any) {
+export async function googleLoginSignup(credential: any) {
   try {
     const response = await api.post("/auth/google", {
-      token : credential
+      token: credential
     });
     console.log("Login successful:", response.data);
-    return response.data; 
+    return response.data;
   } catch (error: any) {
     if (error.response) {
       console.error("Login error:", error.response.data.message);
-      return { error: error.response.data.message }; 
+      return { error: error.response.data.message };
     } else {
       console.error("Error:", error.message);
-      return { error: "Network or server error. Please try again." }; 
+      return { error: "Network or server error. Please try again." };
     }
   }
 }

@@ -61,7 +61,7 @@ const SignUp = () => {
 
 
     const googleLogin = useGoogleLogin({
-        onSuccess: tokenResponse => window.location.href = "http://localhost:8080/api/auth/google",
+        onSuccess: tokenResponse => window.location.href = "https://forex-news-backend.onrender.com/api/auth/google",
         // "http://localhost:8080/api/auth/google",
         // googleLoginApi(tokenResponse?.access_token),
         onError: error => console.log(error)

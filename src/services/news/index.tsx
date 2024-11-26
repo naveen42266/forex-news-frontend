@@ -2,8 +2,8 @@ import axios from 'axios';
 
 // Set up base URL and Axios instance
 const api = axios.create({
-  baseURL: 'http://localhost:8080/api/news', // replace with your backend API URL
-  // baseURL: 'http://localhost:8080/api/todo/', // replace with your backend API URL
+     baseURL: 'https://forex-news-backend.onrender.com/api/news',
+  // baseURL: 'http://localhost:8080/api/news', // replace with your backend API URL
   headers: {
     'Content-Type': 'application/json',
   },
