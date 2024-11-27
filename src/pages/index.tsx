@@ -29,7 +29,7 @@ interface ArticlesDetailProps {
 const Home: React.FC<ArticlesDetailProps> = ({ articles }) => {
   const router = useRouter();
   const { user, updateUser } = useUserDetails();
-  const token  = router.query.token as string; // Ensure you fetch the ID from query params
+  const token = router.query.token as string; // Ensure you fetch the ID from query params
 
   const getAllNewsApi = async () => {
     try {
@@ -49,6 +49,7 @@ const Home: React.FC<ArticlesDetailProps> = ({ articles }) => {
 
   useEffect(() => {
     const token = localStorage.getItem('authToken');
+    const newsData = localStorage.getItem('news');
     if (token) {
       const decoded: any = jwtDecode(token);
       const currentTime = Date.now() / 1000;
@@ -58,7 +59,7 @@ const Home: React.FC<ArticlesDetailProps> = ({ articles }) => {
         localStorage.removeItem("loginMessage");
         localStorage.removeItem("loginTime");
       }
-      else {
+      else if (!newsData) {
         getAllNewsApi();
       }
     }

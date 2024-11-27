@@ -69,7 +69,7 @@ const News: React.FC = () => {
     if (selectedTopics.length > 0 || searchText.trim() !== "") {
       return news.filter((task: NewsType) => {
         const matchesTopics = selectedTopics.length > 0
-          ? selectedTopics.some((topic) => task.topics?.includes(topic))
+          ? selectedTopics.some((topic) => task.title?.includes(topic))
           : true;
 
         const matchesSearchText = searchText.trim() !== ""

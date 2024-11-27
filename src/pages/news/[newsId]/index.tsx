@@ -21,106 +21,98 @@ interface Article {
 
 const ArticleDetail: React.FC = () => {
     const router = useRouter();
-    const { user, updateUser } = useUserDetails();
-    const { newsId: id } = router.query; // Ensure you fetch the ID from query params
+    const { user } = useUserDetails();
+    const { newsId } = router.query;
     const [theNews, setTheNews] = useState<Article | null>(null);
-    const [image, setImage] = useState<any>(null)
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(false);
 
     const handleNewsImgUpload = async (newsId: string, e: React.ChangeEvent<HTMLInputElement>) => {
-        if (!e.target.files?.[0]) {
-            // alert("No file selected.");
-            return;
-        }
+        if (!e.target.files?.[0]) return;
 
         const file = e.target.files[0];
         const allowedFormats = ["image/jpeg", "image/png", "image/webp"];
-        const maxFileSize = 5 * 1024 * 1024; // 5 MB
+        const maxFileSize = 5 * 1024 * 1024;
 
-        // Validate file type and size
-        if (!allowedFormats.includes(file.type)) {
-            // alert("Invalid file format. Please upload JPEG, PNG, or WebP images.");
-            return;
-        }
-        if (file.size > maxFileSize) {
-            // alert("File size exceeds 5MB. Please upload a smaller file.");
+        if (!allowedFormats.includes(file.type) || file.size > maxFileSize) {
+            alert("Invalid file type or size. Please try again.");
             return;
         }
 
-        let body = { id: newsId, image: null as string | ArrayBuffer | null };
+        setLoading(true);
 
         try {
-            // Read the file as Base64
             const reader = new FileReader();
             reader.readAsDataURL(file);
 
             reader.onload = async () => {
-                body.image = reader.result;
+                const body = { id: newsId, image: reader.result };
 
                 try {
-                    const response = await newsImgUpload(body); // Assuming `newsImgUpload` is an API function
+                    const response = await newsImgUpload(body);
                     if (response.error) {
-                        // alert("Image upload failed: " + response.error);
+                        alert(`Image upload failed: ${response.error}`);
                     } else {
-                        // alert("Image uploaded successfully!");
-                        // Update the news image locally for immediate feedback
-                        // setTheNews((prev) =>
-                        //     prev ? { ...prev, urlToImage: response.imageUrl } : null
-                        // );
-                        fetchNews();
-                        setLoading(true)
+                        alert("Image uploaded successfully!");
+                        fetchNews(); // Refresh news after upload
                     }
                 } catch (error) {
                     console.error("Error uploading image:", error);
-                    // alert("An error occurred during upload. Please try again.");
+                    alert("Error uploading image. Please try again.");
+                } finally {
+                    setLoading(false);
                 }
-            };
-
-            reader.onerror = (error) => {
-                console.error("File reading error:", error);
-                // alert("Failed to read the file. Please try again.");
             };
         } catch (error) {
             console.error("Error processing file:", error);
-            // alert("An error occurred during file processing. Please try again.");
+            setLoading(false);
         }
     };
 
     const fetchNews = async () => {
-
+        setLoading(true);
         try {
             const response = await getAllNews();
             localStorage.setItem("news", JSON.stringify(response));
             const matchedArticle = response.find(
-                (news: Article) => news.source.id === id
+                (news: Article) => news.source.id === newsId
             );
             setTheNews(matchedArticle || null);
-            setLoading(false);
         } catch (error) {
-            console.error(error);
+            console.error("Error fetching news:", error);
+        } finally {
             setLoading(false);
         }
     };
 
-
-
-    useEffect(() => {
-        if (!id) return; // Wait until `id` is available
+    const restore = () => {
+        // debugger
         const savedNews = localStorage.getItem("news");
         if (savedNews) {
             try {
                 const parsedNews = JSON.parse(savedNews);
                 const matchedArticle = parsedNews.find(
-                    (news: Article) => news.source.id === id
+                    (news: Article) => news.source.id === newsId
                 );
-                setTheNews(matchedArticle || null); // Handle unmatched cases
+                setTheNews(matchedArticle || null);
             } catch (error) {
                 console.error("Error parsing news data:", error);
+                localStorage.removeItem("news");
             }
         }
-    }, []);
+    };
+    
+    useEffect(() => {
+        if (!theNews) {
+            restore();
+            if (!theNews) {
+                // fetchNews();
+            }
+        }
+    }, [newsId]);
+    
 
-    // If no article is found
+    if (loading) return <p className="text-center text-lg">Loading...</p>;
+
     if (!theNews) {
         return (
             <p className="text-center text-lg text-gray-600">
@@ -129,18 +121,18 @@ const ArticleDetail: React.FC = () => {
         );
     }
 
-    if (loading) return <p className="text-center text-lg">Loading...</p>;
-
-
     return (
         <div>
-            <div className={`min-h-screen flex flex-col bg-gray-100 text-gray-900 transition-colors duration-300 hidden-scrollbar`}>
-                <header className='sticky top-0 left-0 right-0 z-10 bg-primary text-white shadow-md'>
-                    <Header setOpen={() => { user?.type === "User" ? router.push(`/user/${user?.userId}`) : router.push(`/admin/${user?.userId}`) }} />
+            <div className="min-h-screen flex flex-col bg-gray-100 text-gray-900 transition-colors duration-300">
+                <header className="sticky top-0 left-0 right-0 z-10 bg-primary text-white shadow-md">
+                    <Header setOpen={() => user?.type === "User" 
+                        ? router.push(`/user/${user?.userId}`) 
+                        : router.push(`/admin/${user?.userId}`)} 
+                    />
                 </header>
                 <main className="container mx-auto p-4">
                     <div className="text-lg pb-4 cursor-pointer hover:text-slate-500" onClick={() => router.back()}>
-                        {"<"}  Back
+                        {"<"} Back
                     </div>
                     <div className="relative">
                         <img
@@ -148,25 +140,22 @@ const ArticleDetail: React.FC = () => {
                             alt={theNews.title}
                             className="w-full h-96 object-cover rounded-lg mb-4"
                         />
-
-                        {/* Change Button */}
-                        {user?.type === "Admin" && <label
-                            htmlFor="file-upload"
-                            className="absolute bottom-0 right-0 bg-orange-600 hover:bg-orange-400 px-4 py-2 text-white font-semibold cursor-pointer"
-                        >
-                            Change
-                        </label>}
-
-                        {/* Hidden File Input */}
+                        {user?.type === "Admin" && (
+                            <label
+                                htmlFor="file-upload"
+                                className="absolute bottom-0 right-0 bg-orange-600 hover:bg-orange-400 px-4 py-2 text-white font-semibold cursor-pointer"
+                            >
+                                Change
+                            </label>
+                        )}
                         <input
                             id="file-upload"
                             type="file"
                             accept="image/*"
                             className="hidden"
-                            onChange={(e) => {
-                                handleNewsImgUpload(theNews.source.id, e)
-                            }}
-                        />                    </div>
+                            onChange={(e) => handleNewsImgUpload(theNews.source.id, e)}
+                        />
+                    </div>
                     <h1 className="text-2xl font-bold mb-2">{theNews.title}</h1>
                     <p className="text-gray-600 mb-4">By {theNews.author || "Unknown Author"}</p>
                     <p className="text-sm text-gray-500 mb-6">

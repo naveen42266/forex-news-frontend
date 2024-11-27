@@ -4,7 +4,7 @@ import { Facebook, Twitter, LinkedIn, Instagram } from '@mui/icons-material';
 
 const Footer: React.FC = () => {
   return (
-    <Box sx={{ backgroundColor: 'background.default', color: 'text.primary', pb: 4 }}>
+    <Box className="bg-footer" sx={{ color: 'text.primary', pb: 4 }}>
       <Grid container spacing={4} className='px-5' justifyContent="center">
         {/* About Section */}
         <Grid item xs={12} sm={4}>
@@ -60,7 +60,7 @@ const Footer: React.FC = () => {
       </Grid>
 
       <Divider sx={{ my: 4 }} />
-      <Typography variant="body2" color="text.secondary" align="center">
+      <Typography variant="body2" color="text.primary" align="center">
         &copy; 2024 Forex News. All rights reserved.
       </Typography>
     </Box>

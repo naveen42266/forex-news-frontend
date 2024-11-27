@@ -41,8 +41,9 @@ const SignIn = () => {
   };
 
   const googleLogin = useGoogleLogin({
-    onSuccess: tokenResponse => window.location.href = "https://forex-news-backend.onrender.com/api/auth/google",
-    //"http://localhost:8080/api/auth/google",  
+    onSuccess: tokenResponse => window.location.href = 
+    // "http://localhost:8080/api/auth/google",  
+    "https://forex-news-backend.onrender.com/api/auth/google",
     onError: error => console.log(error)
   });
 
@@ -61,8 +62,8 @@ const SignIn = () => {
         <Header setOpen={ ()=> {} } />
         <main className="flex-1 container mx-auto p-4">
           <div className="flex flex-col items-center justify-center h-[500px]">
-            <h2 className="text-3xl font-bold text-blue-600 w-full max-w-md mb-4">Login</h2>
-            <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg border-2 border-blue-600">
+            <h2 className="text-3xl font-bold text-primary w-full max-w-md mb-4">Login</h2>
+            <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg border-2 border-primary">
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                   <label className="block text-gray-600">Email</label>
@@ -71,7 +72,7 @@ const SignIn = () => {
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-tertiary"
                     required
                   />
                 </div>
@@ -82,13 +83,13 @@ const SignIn = () => {
                     name="password"
                     value={formData.password}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-tertiary"
                     required
                   />
                 </div>
                 <button
                   type="submit"
-                  className={`w-full px-4 py-2 font-semibold text-white bg-blue-500 hover:bg-blue-600 ${inProgress ? 'opacity-50' : ''}`}
+                  className={`w-full px-4 py-2 font-semibold text-white bg-primary hover:bg-tertiary ${inProgress ? 'opacity-50' : ''}`}
                   disabled={inProgress}
                 >
                   {inProgress ? <PropagateLoader color="white" /> : "Login"}
@@ -96,11 +97,11 @@ const SignIn = () => {
               </form>
               <div className="flex flex-row justify-center gap-2">
                 Don't have an account? 
-                <div className="text-blue-600 cursor-pointer" onClick={() => router.push('/signUp')}>SignUp</div>
+                <div className="text-primary cursor-pointer" onClick={() => router.push('/signUp')}>SignUp</div>
               </div>
               <div className="flex flex-row justify-center">
                 <button
-                  className="flex items-center gap-1 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                  className="flex items-center gap-1 px-4 py-2 bg-primary text-white rounded-md hover:bg-tertiary"
                   onClick={() => googleLogin()}
                 >
                   Login with <span className="font-semibold">Google</span>

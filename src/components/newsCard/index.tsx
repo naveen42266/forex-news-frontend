@@ -18,7 +18,7 @@ interface Article {
 const NewsCard: React.FC<{ article: Article }> = ({ article }) => {
   const router = useRouter();
   return (
-    <div className="border rounded-lg shadow-md overflow-hidden">
+    <div className="border rounded-lg shadow-md overflow-hidden bg-secondary">
       <img
         src={article.urlToImage}
         alt={article.title}
